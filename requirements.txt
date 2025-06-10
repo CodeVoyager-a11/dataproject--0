@@ -1,0 +1,4 @@
+plotly
+folium
+yfinance
+streamlit_folium
