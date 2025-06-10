@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import folium
 from streamlit_folium import st_folium
+import matplotlib.pyplot as plt
+
 
 
 # 데이터 정의
