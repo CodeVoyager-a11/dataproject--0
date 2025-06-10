@@ -1,8 +1,8 @@
 
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-
+import folium
+from streamlit_folium import st_folium
 # 데이터 정의
 data = {
     '연도': [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
