@@ -23,7 +23,7 @@ max_increase = df['작년 대비 변화'].max()
 max_decrease = df['작년 대비 변화'].min()
 
 # Streamlit UI
-st.title("📊 성별 격차 변화 분석 (증가/감소 포인트 강조)")
+st.title("📊 성별 격차 변화 분석 (채워진 강조 점)")
 selected_years = st.slider("연도 범위 선택", 2014, 2023, (2014, 2023))
 start, end = str(selected_years[0]), str(selected_years[1])
 filtered_df = df[(df['연도'] >= start) & (df['연도'] <= end)].copy()
@@ -40,14 +40,14 @@ line = alt.Chart(filtered_df).mark_line(point=True, color='gray').encode(
     ]
 )
 
-# 최대 증가점 (빨간 점)
+# 최대 증가점 (빨간 점, 내부 채움)
 increase_point = alt.Chart(filtered_df[filtered_df['작년 대비 변화'] == max_increase]).mark_point(
-    size=100, color='red'
+    size=100, color='red', filled=True
 ).encode(x='연도:N', y='성별 격차:Q')
 
-# 최대 감소점 (파란 점)
+# 최대 감소점 (파란 점, 내부 채움)
 decrease_point = alt.Chart(filtered_df[filtered_df['작년 대비 변화'] == max_decrease]).mark_point(
-    size=100, color='blue'
+    size=100, color='blue', filled=True
 ).encode(x='연도:N', y='성별 격차:Q')
 
 # 결합
