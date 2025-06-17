@@ -3,7 +3,7 @@ import pandas as pd
 import folium
 from streamlit_folium import st_folium
 
-## 데이터 정의
+# 데이터 정의
 data = {
     '연도': [2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
     '남자': [69.0, 69.0, 69.0, 67.8, 69.6, 69.0, 67.1, 69.5, 71.2, 72.4],
@@ -24,7 +24,7 @@ min_year, max_year = st.slider(
     value=(2014, 2023)
 )
 
-# 선택 가능한 항목
+# 항목 선택
 options = st.multiselect(
     "표시할 항목을 선택하세요:",
     options=['남자', '여자', '남녀 평균'],
@@ -39,3 +39,6 @@ if filtered_df.empty:
     st.warning("하나 이상의 항목을 선택해주세요.")
 else:
     st.line_chart(filtered_df)
+    
+    # ✅ 그래프 아래에 출처 표시
+    st.caption("출처: 교육통계서비스 (KESS), 대학졸업자 취업통계")
