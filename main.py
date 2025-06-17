@@ -14,10 +14,6 @@ df = pd.DataFrame(data)
 df['남녀 평균'] = df[['남자', '여자']].mean(axis=1)
 df.set_index('연도', inplace=True)
 
-
-st.line_chart(filtered_df)
-
-
 # 제목
 st.title("대학졸업자 취업률 추이 (2014-2023)")
 
