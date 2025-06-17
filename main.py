@@ -4,7 +4,8 @@ import folium
 from streamlit_folium import st_folium
 
 
-# 연도를 문자열로 지정
+
+# 연도 문자열로 처리
 data = {
     '연도': ['2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023'],
     '남자': [69.0, 69.0, 69.0, 67.8, 69.6, 69.0, 67.1, 69.5, 71.2, 72.4],
@@ -12,34 +13,37 @@ data = {
 }
 df = pd.DataFrame(data)
 df['남녀 평균'] = df[['남자', '여자']].mean(axis=1)
-df.set_index('연도', inplace=True)
+df = df.melt(id_vars='연도', var_name='성별', value_name='취업률')
 
-# 제목
+# Streamlit UI
 st.title("대학졸업자 취업률 추이 (2014-2023)")
 
-# 항목 선택
-options = st.multiselect(
+selected_items = st.multiselect(
     "표시할 항목을 선택하세요:",
-    options=['남자', '여자', '남녀 평균'],
+    options=df['성별'].unique().tolist(),
     default=['남자', '여자', '남녀 평균']
 )
 
-# 연도 슬라이더를 문자열에 맞게 변환
-years = df.index.tolist()
-start_year, end_year = st.select_slider(
+min_year, max_year = st.select_slider(
     "연도 범위를 선택하세요:",
-    options=years,
-    value=(years[0], years[-1])
+    options=sorted(df['연도'].unique()),
+    value=('2014', '2023')
 )
 
-# 데이터 필터링
-filtered_df = df.loc[start_year:end_year, options]
+# 필터링
+filtered_df = df[
+    (df['성별'].isin(selected_items)) &
+    (df['연도'] >= min_year) & (df['연도'] <= max_year)
+]
 
-# 그래프 출력
-if filtered_df.empty:
-    st.warning("하나 이상의 항목을 선택해주세요.")
-else:
-    st.line_chart(filtered_df)
+# Altair 차트
+chart = alt.Chart(filtered_df).mark_line(point=True).encode(
+    x=alt.X('연도:N', axis=alt.Axis(labelAngle=0)),  # 레이블을 0도로 회전 → 가로
+    y='취업률:Q',
+    color='성별:N'
+).properties(width=700, height=400)
 
-    # 출처
-    st.caption("출처: 교육통계서비스 (KESS), 대학졸업자 취업통계")
+st.altair_chart(chart)
+
+# 출처
+st.caption("출처: 교육통계서비스 (KESS), 대학졸업자 취업통계")
